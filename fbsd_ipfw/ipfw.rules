@@ -1,34 +1,6 @@
-pfw Firewall Commands
-cmd="ipfw -q add"
-ipfw -q -f flush
-pif="em0"
-
-# Allow Loopback and Deny Loopback Spoofing
-$cmd allow all from any to any via lo0
-$cmd deny all from any to 127.0.0.0/8
-$cmd deny all from 127.0.0.0/8 to any
-$cmd deny tcp from any to any frag
-
-# Stateful rules
-$cmd check-state
-$cmd deny tcp from any to any established
-$cmd allow all from any to any out keep-state
-$cmd allow icmp from any to any
-
-# Table 10 for IP blocks
-ipfw -q table 10 add 127.0.0.2
-ipfw -q add 900 deny ip from 'table(10)' to any
-
-# Incoming/Outgoing Services
-$cmd 60010 allow tcp from any to any 1443
-$cmd 60016 allow tcp from any to any 54678 in
-$cmd 60016 allow tcp from any to any 54678 out
-/etc/ipfw.rules: 38 lines, 1190 characters.
-------------------------------------------------------------
-~ » cat /etc/ipfw.rules                                                                                             einyx@torilla
 #!/bin/sh
 # ipfw Firewall Commands
-cmd="ipfw -q add"
+cmd='/sbin/ipfw -q add'
 ipfw -q -f flush
 pif="em0"
 
@@ -40,18 +12,17 @@ $cmd deny tcp from any to any frag
 
 # Stateful rules
 $cmd check-state
-$cmd deny tcp from any to any established
+$cmd allow tcp from any to any established
 $cmd allow all from any to any out keep-state
 $cmd allow icmp from any to any
 
 # Table 10 for IP blocks
-ipfw -q table 10 add 127.0.0.2
-ipfw -q add 900 deny ip from 'table(10)' to any
+/sbin/ipfw -q table 10 add 127.0.0.2
+$cmd add 900 deny ip from 'table(10)' to any
 
 # Incoming/Outgoing Services
 $cmd 60010 allow tcp from any to any 1443
-$cmd 60016 allow tcp from any to any 54678 in
-$cmd 60016 allow tcp from any to any 54678 out
+$cmd 60016 allow tcp from any to any 54678 keep-state
 
 
 # Deny Port scanning (Nmap)
