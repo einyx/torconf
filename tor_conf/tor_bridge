@@ -1,0 +1,9 @@
+SocksPort 0
+ORPort 1443
+BridgeRelay 1
+Exitpolicy reject *:*
+
+Nickname torilla
+##ContactInfo CHANGEME_2
+#
+ServerTransportPlugin obfs3 exec /usr/local/bin/obfsproxy managed
